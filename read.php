@@ -8,18 +8,21 @@ echo '<tr>';
 echo '<th>日時</th>';
 echo '<th>名前</th>';
 echo '<th>メールアドレス</th>';
+echo '<th>ファイル名</th>';
 echo '<th>質問内容</th>';
 echo '<th>回答</th>';
-echo '<th>ファイル名</th>';
-echo '<th>抽出テキスト</th>';
 echo '</tr>';
 
 // ファイル内容を1行ずつ読み込んで出力
-while ($str = fgets($file)) {
-    $columns = explode(',', trim($str)); // カンマで区切って配列にする
+while (($columns = fgetcsv($file)) !== FALSE) {
     echo '<tr>'; // 表の行を開始
-    foreach ($columns as $column) {
-        echo '<td>' . htmlspecialchars($column) . '</td>'; // 各データをセルとして表示
+    foreach ($columns as $index => $column) {
+        $column = htmlspecialchars($column);
+        if ($index == 3) { // ファイル名の列
+            echo '<td><a href="data/' . $column . '" target="_blank">' . $column . '</a></td>';
+        } else {
+            echo '<td>' . $column . '</td>'; // 各データをセルとして表示
+        }
     }
     echo '</tr>'; // 表の行を終了
 }
